@@ -1,0 +1,26 @@
+name: Build and push new image
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  USERNAME: ${{ secrets.USERNAME }}
+  PASSWORD: ${{ secrets.PASSWORD }}
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: build image
+        run: docker build -t shmink/melos .
+
+      - name: login
+        run: docker login -u ${USERNAME} -p ${PASSWORD}
+
+      - name: push image
+        run: docker push shmink/melos
